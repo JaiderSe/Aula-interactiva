@@ -4,6 +4,7 @@ export const MOCK_LESSONS: Lesson[] = [
   {
     id: '1',
     title: 'Introducción a la Biología Celular',
+    unit: 'Unidad 1: Fundamentos de la Vida',
     date: '2024-05-15',
     resources: [
       {
@@ -42,6 +43,7 @@ export const MOCK_LESSONS: Lesson[] = [
   {
     id: '2',
     title: 'Genética Mendeliana',
+    unit: 'Unidad 2: Herencia y Genética',
     date: '2024-05-22',
     resources: [
       {

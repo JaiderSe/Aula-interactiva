@@ -8,6 +8,7 @@ export const seedDatabase = async (teacherId: string) => {
     for (const mockLesson of MOCK_LESSONS) {
       const lessonRef = await addDoc(collection(db, 'lessons'), {
         title: mockLesson.title,
+        unit: mockLesson.unit,
         date: mockLesson.date,
         teacherId: teacherId,
         description: 'Lección importada de demostración'

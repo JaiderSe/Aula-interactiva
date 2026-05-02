@@ -26,18 +26,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const userRef = doc(db, 'users', currentUser.uid);
         const userDoc = await getDoc(userRef);
         
-        if (userDoc.exists()) {
-          setUserProfile(userDoc.data());
-        } else {
-          // Asignar rol basado en el correo proporcionado
-          const teacherEmail = 'morenoquinterojaidersebastian@gmail.com';
-          const role = currentUser.email === teacherEmail ? 'teacher' : 'student';
+        const teacherEmail = 'morenoquinterojaidersebastian@gmail.com';
+        const expectedRole = currentUser.email === teacherEmail ? 'teacher' : 'student';
 
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          // Si el rol en la DB no coincide con lo esperado (ej: el admin inició antes de la regla), lo actualizamos
+          if (data.role !== expectedRole) {
+            await setDoc(userRef, { ...data, role: expectedRole }, { merge: true });
+            setUserProfile({ ...data, role: expectedRole });
+          } else {
+            setUserProfile(data);
+          }
+        } else {
+          // Crear perfil nuevo
           const newProfile = {
             uid: currentUser.uid,
             email: currentUser.email,
             displayName: currentUser.displayName,
-            role: role,
+            role: expectedRole,
             createdAt: new Date().toISOString()
           };
           await setDoc(userRef, newProfile);
