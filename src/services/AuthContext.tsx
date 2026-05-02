@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { handleFirestoreError, OperationType } from './firestoreUtils';
 
 interface AuthContextType {
   user: User | null;
@@ -22,33 +23,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Obtener o crear perfil en Firestore
-        const userRef = doc(db, 'users', currentUser.uid);
-        const userDoc = await getDoc(userRef);
-        
-        const teacherEmail = 'morenoquinterojaidersebastian@gmail.com';
-        const expectedRole = currentUser.email === teacherEmail ? 'teacher' : 'student';
-
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          // Si el rol en la DB no coincide con lo esperado (ej: el admin inició antes de la regla), lo actualizamos
-          if (data.role !== expectedRole) {
-            await setDoc(userRef, { ...data, role: expectedRole }, { merge: true });
-            setUserProfile({ ...data, role: expectedRole });
+        try {
+          const userRef = doc(db, 'users', currentUser.uid);
+          const userDoc = await getDoc(userRef);
+          
+          if (userDoc.exists()) {
+            setUserProfile(userDoc.data());
           } else {
-            setUserProfile(data);
+            const teacherEmail = 'morenoquinterojaidersebastian@gmail.com';
+            const role = currentUser.email === teacherEmail ? 'teacher' : 'student';
+            
+            const newProfile = {
+              uid: currentUser.uid,
+              email: currentUser.email || '',
+              displayName: currentUser.displayName || 'Usuario',
+              role: role,
+              createdAt: new Date().toISOString()
+            };
+            await setDoc(userRef, newProfile);
+            setUserProfile(newProfile);
           }
-        } else {
-          // Crear perfil nuevo
-          const newProfile = {
-            uid: currentUser.uid,
-            email: currentUser.email,
-            displayName: currentUser.displayName,
-            role: expectedRole,
-            createdAt: new Date().toISOString()
-          };
-          await setDoc(userRef, newProfile);
-          setUserProfile(newProfile);
+        } catch (error) {
+          console.error('Error fetching/creating profile:', error);
         }
       } else {
         setUserProfile(null);

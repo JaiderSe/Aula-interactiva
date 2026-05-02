@@ -1,93 +1,58 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 0. Default Deny
+    // 0. Seguridad por Defecto: Denegar Todo
     match /{document=**} {
       allow read, write: if false;
     }
 
-    // --- Helpers ---
+    // --- Helpers Globales ---
     function isSignedIn() { return request.auth != null; }
+    function isVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+    function isTeacher() { 
+      return isVerified() && request.auth.token.email == 'morenoquinterojaidersebastian@gmail.com'; 
+    }
     function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
-    function getUserData() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
-    function isTeacher() { return isSignedIn() && getUserData().role == 'teacher'; }
     function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
     
     function incoming() { return request.resource.data; }
     function existing() { return resource.data; }
 
-    // --- Validation Blueprints ---
-    function isValidUser(data) {
-      return data.keys().hasAll(['uid', 'email', 'role']) &&
-             data.keys().size() <= 6 &&
-             data.uid == request.auth.uid &&
-             data.email == request.auth.token.email &&
-             data.role in ['teacher', 'student'] &&
-             (data.get('displayName', '') is string && data.get('displayName', '').size() <= 100);
-    }
-
-    function isValidLesson(data) {
-      return data.keys().hasAll(['title', 'date', 'teacherId']) &&
-             data.title is string && data.title.size() <= 200 &&
-             data.teacherId == request.auth.uid;
-    }
-
-    function isValidResource(data) {
-      return data.keys().hasAll(['title', 'type', 'url']) &&
-             data.type in ['video', 'pdf', 'presentation'] &&
-             data.url is string && data.url.size() <= 1000;
-    }
-
-    function isValidActivity(data) {
-      return data.keys().hasAll(['title', 'dueDate', 'lessonId']) &&
-             data.title is string && data.title.size() <= 200;
-    }
-
-    function isValidSubmission(data) {
-      return data.keys().hasAll(['activityId', 'studentId', 'fileName', 'fileUrl']) &&
-             data.studentId == request.auth.uid &&
-             data.fileName is string && data.fileName.size() <= 255 &&
-             data.fileUrl is string && data.fileUrl.size() <= 1000;
-    }
-
-    // --- Collection Matches ---
-
-    // Users
+    // --- Perfiles de Usuario ---
     match /users/{userId} {
       allow get: if isSignedIn();
-      allow list: if false; // Prevention of user scraping
-      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming());
-      allow update: if isSignedIn() && isOwner(userId) && isValidUser(incoming()) && 
-                    incoming().diff(existing()).affectedKeys().hasOnly(['displayName']);
+      allow create: if isOwner(userId) && 
+                      incoming().role == (request.auth.token.email == 'morenoquinterojaidersebastian@gmail.com' ? 'teacher' : 'student');
+      allow update: if isTeacher() || (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['displayName']));
     }
 
-    // Lessons
+    // --- Lecciones y Contenido (Solo docente modifica) ---
     match /lessons/{lessonId} {
       allow read: if isSignedIn();
-      allow create: if isTeacher() && isValidLesson(incoming());
-      allow update: if isTeacher() && isOwner(existing().teacherId) && isValidLesson(incoming());
-      allow delete: if isTeacher() && isOwner(existing().teacherId);
+      allow create, update, delete: if isTeacher();
 
-      // Sub-resources
-      match /resources/{resourceId} {
+      match /resources/{resId} {
         allow read: if isSignedIn();
-        allow write: if isTeacher() && isValidResource(incoming());
+        allow write: if isTeacher();
       }
 
-      // Sub-activities
-      match /activities/{activityId} {
+      match /activities/{actId} {
         allow read: if isSignedIn();
-        allow write: if isTeacher() && isValidActivity(incoming());
+        allow write: if isTeacher();
       }
     }
 
-    // Submissions
-    match /submissions/{submissionId} {
-      allow read: if isSignedIn() && (isOwner(existing().studentId) || isTeacher());
-      allow list: if isSignedIn() && (resource.data.studentId == request.auth.uid || isTeacher());
-      allow create: if isSignedIn() && isValidSubmission(incoming());
-      allow update: if isTeacher() && incoming().diff(existing()).affectedKeys().hasOnly(['grade', 'status']);
-      allow delete: if isOwner(existing().studentId) && existing().get('status', '') != 'graded';
+    // --- Entregas (Alumnos crean, Docente califica) ---
+    match /submissions/{subId} {
+      allow read: if isSignedIn() && (isTeacher() || existing().studentId == request.auth.uid);
+      allow list: if isSignedIn(); // Filtrado por where('studentId', '==', uid) en el cliente
+      
+      allow create: if isVerified() && 
+                      incoming().studentId == request.auth.uid &&
+                      incoming().status == 'submitted';
+      
+      allow update: if isTeacher() && incoming().diff(existing()).affectedKeys().hasOnly(['grade', 'feedback', 'status']);
+      allow delete: if isTeacher() || (isOwner(existing().studentId) && existing().status == 'submitted');
     }
   }
 }

@@ -2,65 +2,94 @@ import { Lesson, ResourceType } from './types';
 
 export const MOCK_LESSONS: Lesson[] = [
   {
-    id: '1',
-    title: 'Introducción a la Biología Celular',
-    unit: 'Unidad 1: Fundamentos de la Vida',
-    date: '2024-05-15',
+    id: 'u1',
+    title: 'Unidad 1: Fundamentos y Patrones de Prompting',
+    date: '2024-06-01',
     resources: [
       {
-        id: 'r1',
-        title: 'Estructura de la Célula',
-        description: 'Video explicativo sobre los organelos celulares.',
+        id: 'r101',
+        title: 'Video: Introducción al Prompt Engineering (2026)',
+        description: 'Curso didáctico para principiantes de EDteam.',
         type: ResourceType.VIDEO,
-        url: 'https://www.youtube.com/embed/P_PeyK-e8iY',
-        thumbnail: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=400&h=225&auto=format&fit=crop'
+        url: 'https://www.youtube.com/embed/8Wqgr7Ry3dk',
+        thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=400&h=225&auto=format&fit=crop'
       },
       {
-        id: 'r2',
-        title: 'Guía de Organelos (PDF)',
-        description: 'Documento detallado con las funciones de cada organelo.',
+        id: 'r102',
+        title: 'PDF: Catálogo de Patrones de Prompting',
+        description: 'Fundamentos y ejemplos prácticos para mejorar la interacción con ChatGPT.',
         type: ResourceType.PDF,
-        url: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+        url: 'https://arxiv.org/pdf/2302.11382.pdf'
       },
       {
-        id: 'r3',
-        title: 'Presentación Interactiva',
-        description: 'Diapositivas para repasar los conceptos clave.',
+        id: 'r103',
+        title: 'Presentación: Ingeniería de Prompts (Oficial)',
+        description: 'Material visual de apoyo para el curso de ingeniería de prompts.',
         type: ResourceType.PRESENTATION,
-        url: 'https://slides.com/emily/deck/embed',
+        url: 'https://docs.google.com/presentation/d/e/2PACX-1vTedL0d6I4Rhh6pH133DVBqqjhndz2Ib6MP0Dssxh-RuLJSalNSb0Bmw9W9zoG5pw/pubembed?start=false&loop=false&delayms=5000',
+        thumbnail: 'https://images.unsplash.com/photo-1454165833766-01d794628cc2?q=80&w=400&h=225&auto=format&fit=crop'
       }
     ],
     activities: [
       {
-        id: 'a1',
-        title: 'Cuestionario de Organelos',
-        description: 'Responde 10 preguntas sobre la función de las mitocondrias y el núcleo.',
-        dueDate: '2024-05-20',
+        id: 'a101',
+        title: 'Taller de Patrones Básicos',
+        description: 'Diseñar 3 prompts utilizando el patrón de "Persona" y "Limitación de Salida".',
+        dueDate: '2024-06-05',
         status: 'pending'
       }
     ]
   },
   {
-    id: '2',
-    title: 'Genética Mendeliana',
-    unit: 'Unidad 2: Herencia y Genética',
-    date: '2024-05-22',
+    id: 'u2',
+    title: 'Unidad 2: Técnicas Avanzadas y Vision-Language',
+    date: '2024-06-15',
     resources: [
       {
-        id: 'r4',
-        title: 'Las Leyes de Mendel',
-        description: 'Breve historia y explicación de las 3 leyes fundamentales.',
+        id: 'r201',
+        title: 'Video: Zero-shot, Few-shot y Chaining',
+        description: 'Explicación detallada de técnicas de encadenamiento y pocos ejemplos.',
         type: ResourceType.VIDEO,
-        url: 'https://www.youtube.com/embed/YpSgjv1qH3c',
-        thumbnail: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=400&h=225&auto=format&fit=crop'
+        url: 'https://www.youtube.com/embed/wM1NrkwJrvU',
+        thumbnail: 'https://images.unsplash.com/photo-1620712943543-bcc4628c9759?q=80&w=400&h=225&auto=format&fit=crop'
+      },
+      {
+        id: 'r202',
+        title: 'PDF: Survey de Prompting en Modelos de Visión',
+        description: 'Estudio sistemático sobre modelos de lenguaje y visión (Nivel Avanzado).',
+        type: ResourceType.PDF,
+        url: 'https://arxiv.org/pdf/2307.12980.pdf'
       }
     ],
     activities: [
       {
-        id: 'a2',
-        title: 'Taller de Cruzamientos',
-        description: 'Realiza los cuadros de Punnett indicados en la guía.',
-        dueDate: '2024-05-25',
+        id: 'a201',
+        title: 'Análisis de Casos en Batch',
+        description: 'Aplicar Prompt Chaining para resolver un problema matemático complejo.',
+        dueDate: '2024-06-20',
+        status: 'pending'
+      }
+    ]
+  },
+  {
+    id: 'u3',
+    title: 'Unidad 3: Optimización y Auto-Prompting',
+    date: '2024-06-30',
+    resources: [
+      {
+        id: 'r301',
+        title: 'PDF: Prompt Engineering a Prompt Engineer',
+        description: 'Investigación sobre la automatización y síntesis de prompts.',
+        type: ResourceType.PDF,
+        url: 'https://arxiv.org/pdf/2311.05661.pdf'
+      }
+    ],
+    activities: [
+      {
+        id: 'a301',
+        title: 'Proyecto Final: Syllabus de Prompting',
+        description: 'Diseñar un curso corto de 4 semanas para otros compañeros.',
+        dueDate: '2024-07-05',
         status: 'pending'
       }
     ]

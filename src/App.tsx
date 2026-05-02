@@ -1,7 +1,7 @@
 import { Layout } from './components/Layout';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LessonsPage } from './pages/Lessons';
-import { BookOpen, TrendingUp, Users, Star, CheckCircle2, Clock, LogIn, Loader2 } from 'lucide-react';
+import { BookOpen, TrendingUp, Users, Star, CheckCircle2, Clock, LogIn, Loader2, ChevronRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from './lib/utils';
 import { MOCK_LESSONS } from './data';
@@ -53,13 +53,13 @@ const Dashboard = () => {
         </div>
         <div className="bg-white px-6 py-4 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-6">
           <div className="text-center">
-            <span className="block text-2xl font-bold text-gray-900">{isTeacher ? '24' : '4.8'}</span>
+            <span className="block text-2xl font-bold text-gray-900">{isTeacher ? '32' : '4.9'}</span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{isTeacher ? 'Estudiantes' : 'Promedio'}</span>
           </div>
           <div className="w-px h-8 bg-gray-100" />
           <div className="text-center">
-            <span className="block text-2xl font-bold text-gray-900">4</span>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Tareas hoy</span>
+            <span className="block text-2xl font-bold text-gray-900">3</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Unidades</span>
           </div>
         </div>
       </header>
@@ -67,10 +67,10 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: isTeacher ? 'Promedio General' : 'Mi Promedio', val: isTeacher ? '4.2' : '4.5', icon: <TrendingUp className="text-blue-500" />, bg: 'bg-blue-50' },
-          { label: isTeacher ? 'Participación' : 'Asistencia', val: '88%', icon: <Users className="text-green-500" />, bg: 'bg-green-50' },
-          { label: isTeacher ? 'Tareas Entregadas' : 'Tareas Pendientes', val: isTeacher ? '12' : '2', icon: <Star className="text-orange-500" />, bg: 'bg-orange-50' },
-          { label: 'Lecciones Activas', val: '8', icon: <BookOpen className="text-purple-500" />, bg: 'bg-purple-50' },
+          { label: isTeacher ? 'Promedio General' : 'Mi Promedio', val: isTeacher ? '4.5' : '4.9', icon: <TrendingUp className="text-blue-500" />, bg: 'bg-blue-50' },
+          { label: 'Participación', val: '94%', icon: <Users className="text-green-500" />, bg: 'bg-green-50' },
+          { label: isTeacher ? 'Tareas Por Calificar' : 'Tareas Pendientes', val: isTeacher ? '8' : '1', icon: <Star className="text-orange-500" />, bg: 'bg-orange-50' },
+          { label: 'Recursos Totales', val: '7', icon: <BookOpen className="text-purple-500" />, bg: 'bg-purple-50' },
         ].map((stat, i) => (
           <motion.div
             key={i}
@@ -97,37 +97,68 @@ const Dashboard = () => {
           <div className="bg-[#111827] rounded-3xl p-8 text-white relative overflow-hidden">
              <div className="relative z-10">
                <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-60">Siguiente Sesión</span>
-               <h3 className="text-3xl font-bold mt-2">Genética Mendeliana</h3>
+               <h3 className="text-3xl font-bold mt-2">Fundamentos de Prompting</h3>
                <p className="mt-4 text-gray-400 max-w-sm">
                  {isTeacher 
-                  ? 'Mañana a las 8:00 AM • Laboratorio de Ciencias • 24 Estudiantes confirmados'
-                  : 'Mañana a las 8:00 AM • Laboratorio de Ciencias • No olvides tu bata de laboratorio'}
+                  ? 'Lunes a las 10:00 AM • Aula Virtual • Workshop de Patrones'
+                  : 'Lunes a las 10:00 AM • Aula Virtual • Prepara tus ejemplos de prompts'}
                </p>
                <button className="mt-8 bg-white text-gray-900 px-6 py-3 rounded-xl font-bold hover:bg-gray-100 transition-colors">
-                 {isTeacher ? 'Preparar Material' : 'Ver Guía de Clase'}
+                 {isTeacher ? 'Revisar Taller' : 'Ir a la Clase'}
                </button>
              </div>
              <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/5 rounded-full blur-3xl" />
              <div className="absolute bottom-[-10%] left-[-5%] w-32 h-32 bg-white/10 rounded-full blur-2xl" />
           </div>
+
+          <div className="space-y-4 pt-4">
+            <h3 className="text-lg font-bold text-gray-900">Módulos del Curso</h3>
+            <div className="space-y-3">
+              {MOCK_LESSONS.map((lesson) => (
+                <div key={lesson.id} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between group hover:border-indigo-200 transition-all">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-bold">
+                      {lesson.id.replace('u', '')}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-sm">{lesson.title}</h4>
+                      <p className="text-xs text-gray-500">{lesson.resources.length} Recursos • {lesson.activities.length} Actividades</p>
+                    </div>
+                  </div>
+                  <ChevronRight size={18} className="text-gray-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="space-y-6">
-           <h2 className="text-xl font-bold text-gray-900">Anuncios Rápidos</h2>
+           <h2 className="text-xl font-bold text-gray-900">Anuncios</h2>
            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
-              <div className="p-4 bg-gray-50 rounded-2xl">
-                <p className="text-sm font-medium text-gray-900">Recuerden el examen final</p>
-                <p className="text-xs text-gray-500 mt-1">Publicado hace 2 horas</p>
+              <div className="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                <p className="text-sm font-bold text-indigo-900">¡Nuevo curso disponible!</p>
+                <p className="text-xs text-indigo-600 mt-1">Ingeniería de Prompts para Bachillerato ha sido cargado con éxito.</p>
               </div>
               <div className="p-4 bg-gray-50 rounded-2xl">
-                <p className="text-sm font-medium text-gray-900">Nuevos PDFs en Bio Celular</p>
-                <p className="text-xs text-gray-500 mt-1">Publicado hace 1 día</p>
+                <p className="text-sm font-medium text-gray-900">Taller Unidad 1 disponible</p>
+                <p className="text-xs text-gray-500 mt-1">Publicado hace 5 min</p>
               </div>
               {isTeacher && (
                 <button className="w-full py-3 border-2 border-dashed border-gray-200 rounded-2xl text-sm font-bold text-gray-400 hover:border-gray-900 hover:text-gray-900 transition-all">
                   + Nuevo Anuncio
                 </button>
               )}
+           </div>
+
+           <div className="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl p-6 text-white shadow-lg shadow-indigo-100 overflow-hidden relative group">
+              <div className="relative z-10">
+                <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center mb-4">
+                  <Star className="text-white w-5 h-5" />
+                </div>
+                <h3 className="font-bold text-lg leading-tight">Curso Activo</h3>
+                <p className="text-white/70 text-sm mt-2 leading-snug">Ya puedes explorar la Unidad 1 de Fundamentos de AI.</p>
+              </div>
+              <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
            </div>
         </div>
       </div>
@@ -174,9 +205,9 @@ const ActivitiesPage = () => {
         activityId: selectedActivity.id,
         activityTitle: selectedActivity.title,
         studentId: user.uid,
-        studentName: user.displayName,
+        studentName: user.displayName || 'Estudiante',
         fileName: file.name,
-        fileUrl: URL.createObjectURL(file), 
+        fileUrl: URL.createObjectURL(file), // En prod usar Firebase Storage
         status: 'submitted',
         createdAt: new Date().toISOString()
       };
@@ -185,7 +216,8 @@ const ActivitiesPage = () => {
       setIsModalOpen(false);
       alert('¡Tarea entregada con éxito!');
     } catch (error) {
-      console.error('Error submitting:', error);
+      console.error('Error uploading submission:', error);
+      alert('Error al entregar la tarea. Inténtalo de nuevo.');
     }
   };
 

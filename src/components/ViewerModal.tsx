@@ -52,8 +52,9 @@ export const ViewerModal = ({ resource, onClose }: ViewerModalProps) => {
               />
             ) : resource.type === ResourceType.PDF ? (
               <iframe
-                src={`${resource.url}#toolbar=0`}
-                className="w-full h-full bg-white"
+                src={resource.url.startsWith('/') ? resource.url : `https://docs.google.com/gview?url=${encodeURIComponent(resource.url)}&embedded=true`}
+                className="w-full h-full bg-white font-sans"
+                title={resource.title}
               />
             ) : (
               <iframe
@@ -66,15 +67,20 @@ export const ViewerModal = ({ resource, onClose }: ViewerModalProps) => {
 
           {/* Footer */}
           <div className="px-6 py-4 bg-gray-50 flex items-center justify-between">
-            <p className="text-sm text-gray-600">{resource.description}</p>
-            <a 
-              href={resource.url} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm font-semibold text-gray-900 hover:underline"
-            >
-              Abrir en nueva pestaña <Maximize2 size={16} />
-            </a>
+            <div className="flex-1 mr-4">
+              <p className="text-sm text-gray-600 line-clamp-1">{resource.description}</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <a 
+                href={resource.url} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
+                download
+              >
+                Descargar PDF <Maximize2 size={16} />
+              </a>
+            </div>
           </div>
         </motion.div>
       </motion.div>

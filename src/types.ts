@@ -29,7 +29,6 @@ export interface Lesson {
   id: string;
   title: string;
   description?: string;
-  unit: string; // Ej: "Unidad 1", "Unidad 2"
   date: string;
   resources: Resource[];
   activities: Activity[];
