@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["teacher", "student"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Lesson": {
+      "title": "Lesson",
+      "description": "Educational lesson content",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "teacherId": { "type": "string" }
+      },
+      "required": ["title", "date", "teacherId"]
+    },
+    "Resource": {
+      "title": "Resource",
+      "description": "Learning resource like video or PDF",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "type": "string", "enum": ["video", "pdf", "presentation"] },
+        "url": { "type": "string" },
+        "thumbnail": { "type": "string" }
+      },
+      "required": ["title", "type", "url"]
+    },
+    "Activity": {
+      "title": "Activity",
+      "description": "Task for students",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "lessonId": { "type": "string" }
+      },
+      "required": ["title", "dueDate", "lessonId"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "Student activity submission",
+      "type": "object",
+      "properties": {
+        "activityId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "fileName": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["submitted", "graded"] },
+        "grade": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["activityId", "studentId", "fileName", "fileUrl"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/lessons/{lessonId}": {
+      "schema": "Lesson",
+      "description": "List of lessons"
+    },
+    "/lessons/{lessonId}/resources/{resourceId}": {
+      "schema": "Resource",
+      "description": "Resources for a specific lesson"
+    },
+    "/lessons/{lessonId}/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "Activities for a specific lesson"
+    },
+    "/submissions/{submissionId}": {
+      "schema": "Submission",
+      "description": "Student submissions for activities"
+    }
+  }
+}
