@@ -30,15 +30,7 @@ export const MOCK_LESSONS: Lesson[] = [
         thumbnail: 'https://images.unsplash.com/photo-1454165833766-01d794628cc2?q=80&w=400&h=225&auto=format&fit=crop'
       }
     ],
-    activities: [
-      {
-        id: 'a101',
-        title: 'Taller de Patrones Básicos',
-        description: 'Diseñar 3 prompts utilizando el patrón de "Persona" y "Limitación de Salida".',
-        dueDate: '2024-06-05',
-        status: 'pending'
-      }
-    ]
+    activities: []
   },
   {
     id: 'u2',
@@ -61,15 +53,7 @@ export const MOCK_LESSONS: Lesson[] = [
         url: 'https://arxiv.org/pdf/2307.12980.pdf'
       }
     ],
-    activities: [
-      {
-        id: 'a201',
-        title: 'Análisis de Casos en Batch',
-        description: 'Aplicar Prompt Chaining para resolver un problema matemático complejo.',
-        dueDate: '2024-06-20',
-        status: 'pending'
-      }
-    ]
+    activities: []
   },
   {
     id: 'u3',
@@ -84,14 +68,6 @@ export const MOCK_LESSONS: Lesson[] = [
         url: 'https://arxiv.org/pdf/2311.05661.pdf'
       }
     ],
-    activities: [
-      {
-        id: 'a301',
-        title: 'Proyecto Final: Syllabus de Prompting',
-        description: 'Diseñar un curso corto de 4 semanas para otros compañeros.',
-        dueDate: '2024-07-05',
-        status: 'pending'
-      }
-    ]
+    activities: []
   }
 ];

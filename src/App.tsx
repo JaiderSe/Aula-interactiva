@@ -1,7 +1,7 @@
 import { Layout } from './components/Layout';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LessonsPage } from './pages/Lessons';
-import { BookOpen, TrendingUp, Users, Star, CheckCircle2, Clock, LogIn, Loader2, ChevronRight } from 'lucide-react';
+import { BookOpen, TrendingUp, Users, Star, CheckCircle2, Clock, LogIn, Loader2, ChevronRight, Gamepad2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { cn } from './lib/utils';
 import { MOCK_LESSONS } from './data';
@@ -10,6 +10,8 @@ import { SubmissionModal } from './components/SubmissionModal';
 import { AuthProvider, useAuth } from './services/AuthContext';
 import { collection, getDocs, addDoc, query, where } from 'firebase/firestore';
 import { db } from './services/firebase';
+import { MemoryGame } from './pages/MemoryGame';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const { signIn } = useAuth();
@@ -133,6 +135,21 @@ const Dashboard = () => {
         </div>
 
         <div className="space-y-6">
+           <h2 className="text-xl font-bold text-gray-900">Actividades Rápidas</h2>
+           <Link to="/game" className="block relative group overflow-hidden">
+              <div className="bg-indigo-600 rounded-3xl p-8 text-white relative z-10 transition-transform group-hover:scale-[1.02]">
+                <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-6">
+                  <Gamepad2 className="text-white w-6 h-6" />
+                </div>
+                <h3 className="font-black text-2xl leading-tight">Memory IA</h3>
+                <p className="text-white/70 text-sm mt-3 leading-snug">Juego interactivo para aprender conceptos de IA.</p>
+                <div className="mt-8 inline-flex items-center gap-2 bg-white text-indigo-600 px-6 py-3 rounded-2xl text-xs font-black group-hover:bg-indigo-50 transition-all">
+                  JUGAR AHORA <TrendingUp size={14} />
+                </div>
+              </div>
+              <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+           </Link>
+
            <h2 className="text-xl font-bold text-gray-900">Anuncios</h2>
            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 space-y-4">
               <div className="p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
@@ -249,6 +266,28 @@ const ActivitiesPage = () => {
             : 'Seguimiento de tareas y evaluaciones pendientes.'}
         </p>
       </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Link to="/game" className="block relative group overflow-hidden">
+          <div className="bg-indigo-600 rounded-3xl p-6 text-white relative z-10 transition-transform group-hover:scale-[1.01] h-full flex flex-col justify-between">
+            <div>
+              <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-4">
+                <Gamepad2 className="text-white w-6 h-6" />
+              </div>
+              <h3 className="font-black text-xl leading-tight">Memory IA</h3>
+              <p className="text-white/70 text-sm mt-2 leading-snug">Pon a prueba tu memoria con conceptos de IA y gana medallas.</p>
+            </div>
+            <div className="mt-6 inline-flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-xl text-[10px] font-black group-hover:bg-indigo-50 transition-all w-fit">
+              JUGAR AHORA <TrendingUp size={12} />
+            </div>
+          </div>
+          <div className="absolute top-[-10%] right-[-10%] w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+        </Link>
+        <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-center text-center">
+           <div className="text-2xl font-black text-gray-900">0</div>
+           <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Actividades Entregadas</p>
+        </div>
+      </div>
 
       {isTeacher ? (
         <div className="grid grid-cols-1 gap-4">
@@ -426,6 +465,7 @@ const AppContent = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/clases" element={<LessonsPage />} />
           <Route path="/actividades" element={<ActivitiesPage />} />
+          <Route path="/game" element={<MemoryGame />} />
           <Route path="/configuracion" element={<SettingsPageWrapper />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
